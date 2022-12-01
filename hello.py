@@ -1,3 +1,4 @@
+import random
 
 print("Welcome to the Monopoly Game");
 numPlayers = int(input("Please enter number of players: "));
@@ -22,10 +23,12 @@ for i in range(numPlayers):
 def rollDice():
     print("rolling the dice")
     roll = random.randint(1, 6)
-
+    print(roll)
 i=0;
 
 for i in range(len(playerArray)):
     plr = playerArray[i];
     print("Welcome, " + plr.name + "It's your turn")
     print("Money left: " + str(plr.money_left))
+    print("Press ENTER to roll dice")
+    rollDice()
