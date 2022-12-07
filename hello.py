@@ -253,6 +253,54 @@ gameBoard = [
             boardwalk
     ]
 
+def check_BoardPosition(playerName,gameBoard, position):
+        """
+        Checks what card the player has landed on and carries out the appropriate action.
+        :param board: list, the monopoly board.
+        :return: None
+        """
+        print (position)
+        if gameBoard[position].card_cost == "N/A":  # this means the player cannot purchase the card
+
+            if gameBoard[position].card_name == 'Jail/Visiting Jail':
+                print(f"{playerName} is visiting jail.")
+
+            elif gameBoard[position].card_name == 'Luxury Tax':
+                print(f"{playerName} landed on Luxury Tax and has been fined $75")
+                self.reduce_balance(75)
+
+            elif gameBoard[position].card_name == 'Income Tax':
+                print(f"{playerName} landed on Income Tax and has been fined $200")
+                self.reduce_balance(200)
+
+            elif gameBoard[position].card_name == 'Go to Jail':
+                print(f"{playerName} landed on Go to Jail and has been arrested!")
+                self.send_to_jail()
+
+            else:
+                print(f"{playerName} landed on {gameBoard[position].card_name}")
+
+        else:
+            if gameBoard[position].mortgaged:
+                print(f"{playerName} landed on a mortgaged property.")
+
+            elif gameBoard[position].owner != 'Bank':  # and gameBoard.owner.name != self.name:
+                if gameBoard[position].owner.name == self.name:
+                    print(f"{playerName} landed on {gameBoard[position].card_name}, a property they own.")
+                else:
+                    print(f"{playerName} landed on {gameBoard[position].card_name}, a property owned by {gameBoard.owner.name}")
+                    self.charge_rent(gameBoard)
+
+            else:
+                print(f"{playerName} landed on {gameBoard[position].card_name}")
+                if playerName == "AI":
+                    return 1
+                else:
+                    user_action = input("Do you want to buy the property? (y/n) ")
+                    if user_action == 'y':
+                        gameBoard[position].purchase_card(self)
+
+
 
 
 playerArray = []
@@ -280,3 +328,5 @@ for i in range(len(playerArray)):
         result = rollDice()
     else: print("Try again")
     print("You landed on " + gameBoard[result].card_name)
+    pos = gameBoard[result];
+    check_BoardPosition(plr.name,gameBoard, result)
