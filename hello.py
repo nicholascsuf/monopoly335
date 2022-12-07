@@ -36,7 +36,7 @@ class Player:
     railroadsOwned = "";
     utilitiesOwned = "";
     balance = money_left                      # int
-    cards_owned = []             # list
+    cards_owned = ""             # list
     current_pos = 0          # int (index)
     in_jail = 0                      # bool
     railroads_owned = ""      # int
@@ -46,21 +46,6 @@ class Player:
     def __init__(player,id,name):
         player.name = name
         player.id = id
-
-    def lower_balance(player, amount):
-
-            if player.balance < amount:
-                print("Your balance is insufficient for this action.")
-                bankrupt = player.check_if_bankrupt(amount)
-                if not bankrupt:
-                    print("You need to sell or mortgage certain properties.")
-                    user_action = input("Do you want to sell or mortgage? (s/m)")
-                    if user_action == 's':
-                        pass  # sell()  TODO: implement this function.
-                    else:
-                        pass  # mortgage()  TODO: implement this function.
-            else:
-                player.balance -= amount
 
 
 
@@ -75,13 +60,14 @@ class Card:
         player.mortgage_amt = mortgage_amt            # integer
         player.owner = owner                          # string
         player.mortgaged = mortgaged                  # boolean
-    def purchase_card(self,player):
-        if player.card_cost > player.balance:
+    def purchase_card(self, player):
+
+        if self.card_cost > player.balance:
             print("You do not have any money to purchase at this time.")
         else:
-            player.cards_owned.append(player)
-            player.lower_balance(player.card_cost)
-            player.owner = player
+            player.cards_owned = player.cards_owned + self
+            player.reduce_balance(self.card_cost)
+            self.owner = player
 
 go = Card("Go", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Bank", False)
 med_ave = Card("Mediterranean Avenue", "Brown", 60, 50, 0, {0: 2,
@@ -352,11 +338,11 @@ def send_to_jail(player):
         """
         player.current_pos = 10
 
-def lower_balance(player, amount):
+def lower_balance(self, amount):
 
-        if player.balance < amount:
+        if self.balance < amount:
             print("Your balance is insufficient for this action.")
-            bankrupt = player.check_if_bankrupt(amount)
+            bankrupt = self.check_if_bankrupt(amount)
             if not bankrupt:
                 print("You need to sell or mortgage certain properties.")
                 user_action = input("Do you want to sell or mortgage? (s/m)")
@@ -365,7 +351,7 @@ def lower_balance(player, amount):
                 else:
                     pass  # mortgage()  TODO: implement this function.
         else:
-            player.balance -= amount
+            self.balance -= amount
 
 for i in range(len(playerArray)):
     plr = playerArray[i];
