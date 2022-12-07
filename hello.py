@@ -7,7 +7,7 @@
 
 import random
 
-print("Welcome to the Monopoly Game");
+print("Welcome to the CPSC 335 Monopoly Game");
 numPlayers = int(input("Please enter number of players: "));
 print(numPlayers);
 
@@ -313,11 +313,11 @@ def check_BoardPosition(player,gameBoard, position):
             if gameBoard[position].mortgaged:
                 print(f"{playerName} landed on a mortgaged property.")
 
-            elif gameBoard[position].owner != 'Bank':  # and gameBoard.owner.name != player.name:
+            elif gameBoard[position].owner != 'Bank':
                 if gameBoard[position].owner.name == player.name:
                     print(f"{playerName} landed on {gameBoard[position].card_name}, a property they own.")
                 else:
-                    print(f"{playerName} landed on {gameBoard[position].card_name}, a property owned by {gameBoard.owner.name}")
+                    print(f"{playerName} landed on {gameBoard[position].card_name}, a property owned by {gameBoard[position].owner.name}")
                     player.charge_rent(gameBoard)
 
             else:
@@ -346,14 +346,10 @@ def rollDice():
 i=0;
 
 def send_to_jail(player):
-        """
-        Sends the player to jail.
-        :return: None.
-        """
         player.current_pos = 10
 
 
-
+#TODO Add when all the players runs out of money_left
 for i in range(len(playerArray)):
     plr = playerArray[i];
     print("Welcome, " + plr.name + " It's your turn")
