@@ -35,24 +35,53 @@ class Player:
     bankrupt = 1;
     railroadsOwned = "";
     utilitiesOwned = "";
+    balance = money_left                      # int
+    cards_owned = []             # list
+    current_pos = 0          # int (index)
+    in_jail = 0                      # bool
+    railroads_owned = ""      # int
+    amount_owed = 0              # int
+    bankruptcy_status = 0  # bool
 
-    def __init__(self,id,name):
-        self.name = name
-        self.id = id
+    def __init__(player,id,name):
+        player.name = name
+        player.id = id
+
+    def lower_balance(player, amount):
+
+            if player.balance < amount:
+                print("Your balance is insufficient for this action.")
+                bankrupt = player.check_if_bankrupt(amount)
+                if not bankrupt:
+                    print("You need to sell or mortgage certain properties.")
+                    user_action = input("Do you want to sell or mortgage? (s/m)")
+                    if user_action == 's':
+                        pass  # sell()  TODO: implement this function.
+                    else:
+                        pass  # mortgage()  TODO: implement this function.
+            else:
+                player.balance -= amount
 
 
 
 class Card:
-    def __init__(self, card_name, color_group, card_cost, house_cost, houses_built, rent_prices, mortgage_amt, owner, mortgaged):
-        self.card_name = card_name                  # string
-        self.color_group = color_group              # string
-        self.card_cost = card_cost                  # integer
-        self.house_cost = house_cost                # integer
-        self.houses_built = houses_built            # integer
-        self.rent_prices = rent_prices              # integer
-        self.mortgage_amt = mortgage_amt            # integer
-        self.owner = owner                          # string
-        self.mortgaged = mortgaged                  # boolean
+    def __init__(player, card_name, color_group, card_cost, house_cost, houses_built, rent_prices, mortgage_amt, owner, mortgaged):
+        player.card_name = card_name                  # string
+        player.color_group = color_group              # string
+        player.card_cost = card_cost                  # integer
+        player.house_cost = house_cost                # integer
+        player.houses_built = houses_built            # integer
+        player.rent_prices = rent_prices              # integer
+        player.mortgage_amt = mortgage_amt            # integer
+        player.owner = owner                          # string
+        player.mortgaged = mortgaged                  # boolean
+    def purchase_card(self,player):
+        if player.card_cost > player.balance:
+            print("You do not have any money to purchase at this time.")
+        else:
+            player.cards_owned.append(player)
+            player.lower_balance(player.card_cost)
+            player.owner = player
 
 go = Card("Go", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Bank", False)
 med_ave = Card("Mediterranean Avenue", "Brown", 60, 50, 0, {0: 2,
@@ -89,7 +118,7 @@ conn_ave = Card("Connecticut Avenue", "Light Blue", 120, 50, 0, {0: 8,
                                                                            3: 300,
                                                                            4: 450,
                                                                            5: 600}, 60, "Bank", False)
-    # new row
+
 jail = Card("Jail/Visiting Jail", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Bank", False)
 st_charles_place = Card("St. Charles Place", "Pink", 140, 100, 0, {0: 10,
                                                                              1: 50,
@@ -117,7 +146,7 @@ st_james_place = Card("St. James Place", "Orange", 180, 100, 0, {0: 14,
                                                                            3: 550,
                                                                            4: 750,
                                                                            5: 950}, 90, "Bank", False)
-    # comm chest
+
 ten_ave = Card("Tennessee Avenue", "Orange", 180, 100, 0, {0: 14,
                                                                      1: 70,
                                                                      2: 200,
@@ -131,14 +160,14 @@ ny_ave = Card("New York Avenue", "Orange", 200, 100, 0, {0: 16,
                                                                    4: 800,
                                                                    5: 1000}, 100, "Bank", False)
 free_parking = Card("Free Parking", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Bank", False)
-    # rotate
+
 kentucky_ave = Card("Kentucky Avenue", "Red", 220, 150, 0, {0: 18,
                                                                       1: 90,
                                                                       2: 250,
                                                                       3: 700,
                                                                       4: 875,
                                                                       5: 1050}, 110, "Bank", False)
-    # chance
+
 indiana_ave = Card("Indiana Avenue", "Red", 220, 150, 0, {0: 18,
                                                                     1: 90,
                                                                     2: 250,
@@ -171,7 +200,7 @@ marvin_gardens = Card("Marvin Gardens", "Yellow", 280, 150, 0, {0: 24,
                                                                           3: 850,
                                                                           4: 1025,
                                                                           5: 1200}, 140, "Bank", False)
-    # rotate
+
 go_to_jail = Card("Go to Jail", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Bank", False)
 pacific_ave = Card("Pacific Avenue", "Green", 300, 200, 0, {0: 26,
                                                                       1: 130,
@@ -185,7 +214,7 @@ nc_ave = Card("North Carolina Avenue", "Green", 140, 200, 0, {0: 26,
                                                                         3: 900,
                                                                         4: 1100,
                                                                         5: 1275}, 150, "Bank", False)
-    # comm chest
+
 penn_ave = Card("Pennsylvania Avenue", "Green", 300, 200, 0, {0: 28,
                                                                         1: 150,
                                                                         2: 450,
@@ -193,7 +222,7 @@ penn_ave = Card("Pennsylvania Avenue", "Green", 300, 200, 0, {0: 28,
                                                                         4: 1200,
                                                                         5: 1400}, 160, "Bank", False)
 short_line_rr = Card("Short Line", "Railroad", 200, "N/A", "N/A", "N/A", 100, "Bank", False)
-    # chance
+
 park_place = Card("Park Place", "Blue", 350, 200, 0, {0: 35,
                                                                 1: 175,
                                                                 2: 500,
@@ -207,7 +236,7 @@ boardwalk = Card("Boardwalk", "N/A", 400, 200, 0, {0: 50,
                                                              3: 1400,
                                                              4: 1700,
                                                              5: 2000}, 200, "Bank", False)
-    # end
+
 
 
 gameBoard = [
@@ -253,29 +282,29 @@ gameBoard = [
             boardwalk
     ]
 
-def check_BoardPosition(playerName,gameBoard, position):
+def check_BoardPosition(player,gameBoard, position):
         """
-        Checks what card the player has landed on and carries out the appropriate action.
-        :param board: list, the monopoly board.
-        :return: None
+        Check what position of the board that the player is on
         """
+        playerName = player.name
+        #Object PLAYER is object
         print (position)
-        if gameBoard[position].card_cost == "N/A":  # this means the player cannot purchase the card
+        if gameBoard[position].card_cost == "N/A":
 
             if gameBoard[position].card_name == 'Jail/Visiting Jail':
                 print(f"{playerName} is visiting jail.")
 
             elif gameBoard[position].card_name == 'Luxury Tax':
                 print(f"{playerName} landed on Luxury Tax and has been fined $75")
-                self.reduce_balance(75)
+                player.lower_balance(75)
 
             elif gameBoard[position].card_name == 'Income Tax':
                 print(f"{playerName} landed on Income Tax and has been fined $200")
-                self.reduce_balance(200)
+                player.lower_balance(200)
 
             elif gameBoard[position].card_name == 'Go to Jail':
                 print(f"{playerName} landed on Go to Jail and has been arrested!")
-                self.send_to_jail()
+                player.send_to_jail()
 
             else:
                 print(f"{playerName} landed on {gameBoard[position].card_name}")
@@ -284,12 +313,12 @@ def check_BoardPosition(playerName,gameBoard, position):
             if gameBoard[position].mortgaged:
                 print(f"{playerName} landed on a mortgaged property.")
 
-            elif gameBoard[position].owner != 'Bank':  # and gameBoard.owner.name != self.name:
-                if gameBoard[position].owner.name == self.name:
+            elif gameBoard[position].owner != 'Bank':  # and gameBoard.owner.name != player.name:
+                if gameBoard[position].owner.name == player.name:
                     print(f"{playerName} landed on {gameBoard[position].card_name}, a property they own.")
                 else:
                     print(f"{playerName} landed on {gameBoard[position].card_name}, a property owned by {gameBoard.owner.name}")
-                    self.charge_rent(gameBoard)
+                    player.charge_rent(gameBoard)
 
             else:
                 print(f"{playerName} landed on {gameBoard[position].card_name}")
@@ -298,9 +327,7 @@ def check_BoardPosition(playerName,gameBoard, position):
                 else:
                     user_action = input("Do you want to buy the property? (y/n) ")
                     if user_action == 'y':
-                        gameBoard[position].purchase_card(self)
-
-
+                        gameBoard[position].purchase_card(player)
 
 
 playerArray = []
@@ -318,6 +345,28 @@ def rollDice():
 
 i=0;
 
+def send_to_jail(player):
+        """
+        Sends the player to jail.
+        :return: None.
+        """
+        player.current_pos = 10
+
+def lower_balance(player, amount):
+
+        if player.balance < amount:
+            print("Your balance is insufficient for this action.")
+            bankrupt = player.check_if_bankrupt(amount)
+            if not bankrupt:
+                print("You need to sell or mortgage certain properties.")
+                user_action = input("Do you want to sell or mortgage? (s/m)")
+                if user_action == 's':
+                    pass  # sell()  TODO: implement this function.
+                else:
+                    pass  # mortgage()  TODO: implement this function.
+        else:
+            player.balance -= amount
+
 for i in range(len(playerArray)):
     plr = playerArray[i];
     print("Welcome, " + plr.name + " It's your turn")
@@ -329,4 +378,4 @@ for i in range(len(playerArray)):
     else: print("Try again")
     print("You landed on " + gameBoard[result].card_name)
     pos = gameBoard[result];
-    check_BoardPosition(plr.name,gameBoard, result)
+    check_BoardPosition(plr,gameBoard, result)
