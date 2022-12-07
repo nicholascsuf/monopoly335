@@ -36,7 +36,7 @@ class Player:
     railroadsOwned = "";
     utilitiesOwned = "";
     balance = money_left                      # int
-    cards_owned = ""             # list
+    cards_owned = []            # list
     current_pos = 0          # int (index)
     in_jail = 0                      # bool
     railroads_owned = ""      # int
@@ -47,26 +47,40 @@ class Player:
         player.name = name
         player.id = id
 
+    def lower_balance(self, amount):
+
+            if self.balance < amount:
+                print("Your balance is insufficient for this action.")
+                bankrupt = self.check_if_bankrupt(amount)
+                if not bankrupt:
+                    print("You need to sell or mortgage certain properties.")
+                    user_action = input("Do you want to sell or mortgage? (s/m)")
+                    if user_action == 's':
+                        pass  # sell()  TODO: implement this function.
+                    else:
+                        pass  # mortgage()  TODO: implement this function.
+            else:
+                self.balance -= amount
 
 
 class Card:
-    def __init__(player, card_name, color_group, card_cost, house_cost, houses_built, rent_prices, mortgage_amt, owner, mortgaged):
-        player.card_name = card_name                  # string
-        player.color_group = color_group              # string
-        player.card_cost = card_cost                  # integer
-        player.house_cost = house_cost                # integer
-        player.houses_built = houses_built            # integer
-        player.rent_prices = rent_prices              # integer
-        player.mortgage_amt = mortgage_amt            # integer
-        player.owner = owner                          # string
-        player.mortgaged = mortgaged                  # boolean
+    def __init__(self, card_name, color_group, card_cost, house_cost, houses_built, rent_prices, mortgage_amt, owner, mortgaged):
+        self.card_name = card_name                  # string
+        self.color_group = color_group              # string
+        self.card_cost = card_cost                  # integer
+        self.house_cost = house_cost                # integer
+        self.houses_built = houses_built            # integer
+        self.rent_prices = rent_prices              # integer
+        self.mortgage_amt = mortgage_amt            # integer
+        self.owner = owner                          # string
+        self.mortgaged = mortgaged                  # boolean
     def purchase_card(self, player):
 
         if self.card_cost > player.balance:
             print("You do not have any money to purchase at this time.")
         else:
-            player.cards_owned = player.cards_owned + self
-            player.reduce_balance(self.card_cost)
+            player.cards_owned.append(self)
+            player.lower_balance(self.card_cost)
             self.owner = player
 
 go = Card("Go", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "Bank", False)
@@ -338,20 +352,7 @@ def send_to_jail(player):
         """
         player.current_pos = 10
 
-def lower_balance(self, amount):
 
-        if self.balance < amount:
-            print("Your balance is insufficient for this action.")
-            bankrupt = self.check_if_bankrupt(amount)
-            if not bankrupt:
-                print("You need to sell or mortgage certain properties.")
-                user_action = input("Do you want to sell or mortgage? (s/m)")
-                if user_action == 's':
-                    pass  # sell()  TODO: implement this function.
-                else:
-                    pass  # mortgage()  TODO: implement this function.
-        else:
-            self.balance -= amount
 
 for i in range(len(playerArray)):
     plr = playerArray[i];
