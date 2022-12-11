@@ -7,15 +7,22 @@
 
 import random
 
+#START THE Game
+#Show the welcome menu
+
 print("Welcome to the CPSC 335 Monopoly Game");
 numPlayers = int(input("Please enter number of players: "));
 print(numPlayers);
 
+
+#Not using this at the moment
 class Property:
     name= "";
     cost = 0.00;
     owner = "";
     avail = 1;
+
+#Not using this at the moment
 
 class Lot:
     color = "blue";
@@ -26,6 +33,12 @@ class Lot:
     housesOwned = "";
 
 
+#**********************************************************************************************************************#
+
+#Player class contains the attributes about the players of the game
+#Name, id, how much money left, assets's they own
+#Bankrupt bankruptcy_status
+#how much  money is owed etc.
 
 class Player:
     id = 0;
@@ -46,7 +59,9 @@ class Player:
     def __init__(player,id,name):
         player.name = name
         player.id = id
+#**********************************************************************************************************************#
 
+#Function to reduce balance of player by a certain amount (AMT)
     def lower_balance(self, amount):
 
             if self.balance < amount:
@@ -62,6 +77,9 @@ class Player:
             else:
                 self.balance -= amount
 
+#**********************************************************************************************************************#
+
+#CARD Class - Contains card name color group , cost of card, cost of house, number of houses that were built, cost of the rent, amount of the mortgage payment for each property. Who owns the proerty (owner) and mortgage amount.
 
 class Card:
     def __init__(self, card_name, color_group, card_cost, house_cost, houses_built, rent_prices, mortgage_amt, owner, mortgaged):
@@ -236,7 +254,9 @@ boardwalk = Card("Boardwalk", "N/A", 400, 200, 0, {0: 50,
                                                              3: 1400,
                                                              4: 1700,
                                                              5: 2000}, 200, "Bank", False)
+#**********************************************************************************************************************#
 
+#Game Board for storing the predefined CARDS from the game.
 
 
 gameBoard = [
@@ -282,6 +302,9 @@ gameBoard = [
             boardwalk
     ]
 
+
+##*CHeck the board position function which checks current player position (current_pos) of the player on the board****************************************************#
+
 def check_BoardPosition(player,gameBoard, position):
         """
         Check what position of the board that the player is on
@@ -292,18 +315,18 @@ def check_BoardPosition(player,gameBoard, position):
         if gameBoard[position].card_cost == "N/A":
 
             if gameBoard[position].card_name == 'Jail/Visiting Jail':
-                print(f"{playerName} is visiting jail.")
+                print(f"{playerName} is at jail.")
 
             elif gameBoard[position].card_name == 'Luxury Tax':
                 print(f"{playerName} landed on Luxury Tax and has been fined $75")
                 player.lower_balance(75)
 
             elif gameBoard[position].card_name == 'Income Tax':
-                print(f"{playerName} landed on Income Tax and has been fined $200")
-                player.lower_balance(200)
+                print(f"{playerName} landed on Income Tax and has been fined $250")
+                player.lower_balance(250)
 
             elif gameBoard[position].card_name == 'Go to Jail':
-                print(f"{playerName} landed on Go to Jail and has been arrested!")
+                print(f"{playerName} landed on Go to Jail and is gone to jail")
                 player.send_to_jail()
 
             else:
@@ -315,19 +338,24 @@ def check_BoardPosition(player,gameBoard, position):
 
             elif gameBoard[position].owner != 'Bank':
                 if gameBoard[position].owner.name == player.name:
-                    print(f"{playerName} landed on {gameBoard[position].card_name}, a property they own.")
+                    print(f"{playerName} landed on {gameBoard[position].card_name}, who owns this property")
                 else:
-                    print(f"{playerName} landed on {gameBoard[position].card_name}, a property owned by {gameBoard[position].owner.name}")
+                    print(f"{playerName} landed on {gameBoard[position].card_name}, what is owned by {gameBoard[position].owner.name}")
                     player.charge_rent(gameBoard)
 
             else:
                 print(f"{playerName} landed on {gameBoard[position].card_name}")
-                if playerName == "AI":
+                if playerName == "ABC123":
                     return 1
                 else:
                     user_action = input("Do you want to buy the property? (y/n) ")
                     if user_action == 'y':
                         gameBoard[position].purchase_card(player)
+
+#Store players in playerArray
+
+#Loop through number of players to get the player Name
+#Add each player attrivutes to the player playerArray
 
 
 playerArray = []
@@ -337,6 +365,9 @@ for i in range(numPlayers):
     print(plr.name)
     playerArray.append(plr);
 
+#ROLL THE dice
+#Roll dice using random Function. Return the result.
+
 def rollDice():
     print("rolling the dice")
     roll = random.randint(1, 6)
@@ -345,11 +376,16 @@ def rollDice():
 
 i=0;
 
+#Send the player to jail  - The jail position is set at 10 on the board.
+
 def send_to_jail(player):
         player.current_pos = 10
 
-
+#**********************************************************************************************************************#
+#MAIN GAME  - Cycle through players.
 #TODO Add when all the players runs out of money_left
+
+
 for i in range(len(playerArray)):
     plr = playerArray[i];
     print("Welcome, " + plr.name + " It's your turn")
@@ -362,3 +398,8 @@ for i in range(len(playerArray)):
     print("You landed on " + gameBoard[result].card_name)
     pos = gameBoard[result];
     check_BoardPosition(plr,gameBoard, result)
+
+
+
+
+    #**********************************************************************************************************************#
