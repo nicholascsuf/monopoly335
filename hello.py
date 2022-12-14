@@ -384,10 +384,18 @@ def send_to_jail(player):
 #**********************************************************************************************************************#
 #MAIN GAME  - Cycle through players.
 #TODO Add when all the players runs out of money_left
+gameOver = 0;
 
+bankruptCount = 0;
 
-for i in range(len(playerArray)):
-    plr = playerArray[i];
+while (bankruptCount < 1):
+
+    for i in range(len(playerArray)):
+        plr = playerArray[i];
+
+    if (plr.balance <= 0):
+        bankruptCount = bankruptCount +1;
+    #Break out of loop and end program
     print("Welcome, " + plr.name + " It's your turn")
     print("Money left: " + str(plr.money_left))
     print("Properties :")
@@ -399,6 +407,12 @@ for i in range(len(playerArray)):
     pos = gameBoard[result];
     check_BoardPosition(plr,gameBoard, result)
 
+
+if (bankruptCount > 0):
+    {
+
+    print ("The player is bankrupt. The game is now over")
+    }
 
 
 
